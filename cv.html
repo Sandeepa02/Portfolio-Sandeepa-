@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suraj Sandeepa | CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg-primary);
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-main);
+    }
+
+    .cv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 24px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-glass);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .cv-header h1 {
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .cv-header h1 span {
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cv-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cv-viewer-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    .cv-viewer {
+      flex: 1;
+      width: 100%;
+      min-height: calc(100vh - 100px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      background: var(--bg-secondary);
+    }
+
+    .cv-fallback {
+      display: none;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+
+    .cv-fallback i {
+      font-size: 3rem;
+      color: var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+  <header class="cv-header">
+    <h1><span>Suraj Sandeepa</span> — Curriculum Vitae</h1>
+    <div class="cv-actions">
+      <a href="index.html" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+      </a>
+      <a href="assets/cv/suraj-cv.pdf" download="Suraj_Sandeepa_CV.pdf" class="btn btn-primary">
+        <i class="fas fa-download"></i> Download CV
+      </a>
+    </div>
+  </header>
+
+  <div class="cv-viewer-wrap">
+    <iframe
+      id="cvFrame"
+      class="cv-viewer"
+      src="assets/cv/suraj-cv.pdf"
+      title="Suraj Sandeepa CV"
+    ></iframe>
+    <div id="cvFallback" class="cv-fallback">
+      <i class="fas fa-file-pdf"></i>
+      <p>Your browser can't preview the PDF inline.</p>
+      <a href="assets/cv/suraj-cv.pdf" download="Suraj_Sandeepa_CV.pdf" class="btn btn-primary">
+        <i class="fas fa-download"></i> Download CV
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const frame = document.getElementById('cvFrame');
+    const fallback = document.getElementById('cvFallback');
+
+    frame.addEventListener('error', () => {
+      frame.style.display = 'none';
+      fallback.style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
