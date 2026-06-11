@@ -62,6 +62,11 @@ img { max-width: 100%; display: block; }
   padding: 0 24px;
 }
 
+main {
+  position: relative;
+  z-index: 1;
+}
+
 .section {
   padding: 100px 0;
   position: relative;

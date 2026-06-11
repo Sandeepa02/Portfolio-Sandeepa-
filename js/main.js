@@ -259,8 +259,8 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
   const subject = data.get('subject');
   const message = data.get('message');
 
-  const mailto = `mailto:suraj.sandeepa@email.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
-  window.location.href = mailto;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&to=sandeepasuraj80@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+  window.open(gmailUrl, '_blank', 'noopener,noreferrer');
 
   const btn = form.querySelector('button[type="submit"]');
   const original = btn.innerHTML;
