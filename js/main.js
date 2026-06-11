@@ -251,6 +251,15 @@ function animateCounter(el, target) {
 
 /* ===== Contact Form (FormSubmit → Gmail) ===== */
 const CONTACT_EMAIL = 'sandeepasuraj80@gmail.com';
+const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
+
+function isLocalFilePreview() {
+  return window.location.protocol === 'file:';
+}
+
+function isFormSubmitSuccess(result) {
+  return result.success === true || result.success === 'true';
+}
 
 document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -258,14 +267,32 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
   const form = e.target;
   const btn = document.getElementById('formSubmitBtn');
   const status = document.getElementById('formStatus');
+  const subjectField = document.getElementById('formEmailSubject');
   const data = new FormData(form);
 
-  const name = data.get('name').trim();
-  const email = data.get('email').trim();
-  const subject = data.get('subject').trim();
-  const message = data.get('message').trim();
+  const name = String(data.get('name') || '').trim();
+  const email = String(data.get('email') || '').trim();
+  const subject = String(data.get('subject') || '').trim();
+  const message = String(data.get('message') || '').trim();
 
   if (data.get('_honey')) return;
+
+  if (!name || !email || !subject || !message) {
+    status.textContent = 'Please fill in all fields before sending.';
+    status.className = 'form-status form-status-error';
+    return;
+  }
+
+  if (isLocalFilePreview()) {
+    status.textContent = 'Open your live GitHub Pages site to test email delivery. Local file preview cannot send messages.';
+    status.className = 'form-status form-status-error';
+    return;
+  }
+
+  subjectField.value = `Portfolio Contact: ${subject}`;
+
+  const payload = new FormData(form);
+  payload.set('_replyto', email);
 
   const originalBtn = btn.innerHTML;
   btn.disabled = true;
@@ -274,34 +301,30 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
   status.className = 'form-status';
 
   try {
-    const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+    const response = await fetch(FORMSUBMIT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        subject,
-        message,
-        _subject: `Portfolio Contact: ${subject}`,
-        _replyto: email,
-        _template: 'table',
-      }),
+      headers: { Accept: 'application/json' },
+      body: payload,
     });
 
-    const result = await response.json();
+    let result = {};
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error('Unexpected response from email service.');
+    }
 
-    if (!response.ok || !result.success) {
-      throw new Error(result.message || 'Failed to send message');
+    if (!isFormSubmitSuccess(result)) {
+      throw new Error(result.message || 'Failed to send message.');
     }
 
     btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
     btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-    status.textContent = 'Thank you! Your message has been sent successfully.';
+    status.textContent =
+      'Thank you! If this is your first submission, check sandeepasuraj80@gmail.com (including Spam) and click the FormSubmit activation link. After that, new messages will arrive in your inbox.';
     status.classList.add('form-status-success');
     form.reset();
+    subjectField.value = 'New Portfolio Contact Message';
 
     setTimeout(() => {
       btn.innerHTML = originalBtn;
@@ -309,11 +332,13 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
       btn.disabled = false;
       status.textContent = '';
       status.className = 'form-status';
-    }, 5000);
-  } catch {
+    }, 8000);
+  } catch (error) {
     btn.innerHTML = originalBtn;
     btn.disabled = false;
-    status.textContent = 'Something went wrong. Please try again or email me directly.';
+    status.textContent =
+      error.message ||
+      'Something went wrong. Please try again on your live site or email sandeepasuraj80@gmail.com directly.';
     status.classList.add('form-status-error');
   }
 });
