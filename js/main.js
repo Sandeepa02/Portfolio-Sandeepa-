@@ -249,28 +249,73 @@ function animateCounter(el, target) {
   }, 25);
 }
 
-/* ===== Contact Form ===== */
-document.getElementById('contactForm').addEventListener('submit', (e) => {
+/* ===== Contact Form (FormSubmit → Gmail) ===== */
+const CONTACT_EMAIL = 'sandeepasuraj80@gmail.com';
+
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const form = e.target;
+  const btn = document.getElementById('formSubmitBtn');
+  const status = document.getElementById('formStatus');
   const data = new FormData(form);
-  const name = data.get('name');
-  const email = data.get('email');
-  const subject = data.get('subject');
-  const message = data.get('message');
 
-  const gmailUrl = `https://mail.google.com/mail/?view=cm&to=sandeepasuraj80@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
-  window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+  const name = data.get('name').trim();
+  const email = data.get('email').trim();
+  const subject = data.get('subject').trim();
+  const message = data.get('message').trim();
 
-  const btn = form.querySelector('button[type="submit"]');
-  const original = btn.innerHTML;
-  btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-  btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-  setTimeout(() => {
-    btn.innerHTML = original;
-    btn.style.background = '';
+  if (data.get('_honey')) return;
+
+  const originalBtn = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+  status.textContent = '';
+  status.className = 'form-status';
+
+  try {
+    const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message,
+        _subject: `Portfolio Contact: ${subject}`,
+        _replyto: email,
+        _template: 'table',
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Failed to send message');
+    }
+
+    btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+    status.textContent = 'Thank you! Your message has been sent successfully.';
+    status.classList.add('form-status-success');
     form.reset();
-  }, 3000);
+
+    setTimeout(() => {
+      btn.innerHTML = originalBtn;
+      btn.style.background = '';
+      btn.disabled = false;
+      status.textContent = '';
+      status.className = 'form-status';
+    }, 5000);
+  } catch {
+    btn.innerHTML = originalBtn;
+    btn.disabled = false;
+    status.textContent = 'Something went wrong. Please try again or email me directly.';
+    status.classList.add('form-status-error');
+  }
 });
 
 /* ===== Smooth Scroll for anchor links ===== */
