@@ -44,10 +44,10 @@ Brief description of what this project does and the technologies used.
 
 ## 🌐 Connect with Me
 
-- 💼 [LinkedIn](your-linkedin-url)
+- 💼 [LinkedIn](www.linkedin.com/in/suraj-sandeepa-161813302)
 - 🐙 [GitHub](https://github.com/Sandeepa02)
-- 📧 Email: your-email@example.com
-- 🌍 Portfolio Website: [Your Website](your-website-url)
+- 📧 Email: sandeepasuraj80@gmail.com
+- 🌍 Portfolio Website: [Your Website](https://sandeepa02.github.io/Portfolio-Sandeepa-/)
 
 ---
 
