@@ -44,7 +44,7 @@ Brief description of what this project does and the technologies used.
 
 ## 🌐 Connect with Me
 
-- 💼 [LinkedIn](www.linkedin.com/in/suraj-sandeepa-161813302)
+- 💼 [LinkedIn](https://www.linkedin.com/in/suraj-sandeepa-161813302)
 - 🐙 [GitHub](https://github.com/Sandeepa02)
 - 📧 Email: sandeepasuraj80@gmail.com
 - 🌍 Portfolio Website: [Your Website](https://sandeepa02.github.io/Portfolio-Sandeepa-/)
